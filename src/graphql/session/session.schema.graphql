@@ -1,0 +1,12 @@
+type Session {
+	id: ID
+	userId: String
+}
+
+input LoginInput {
+	name: String!
+}
+
+type Mutation {
+	login(input: LoginInput!): Session
+}

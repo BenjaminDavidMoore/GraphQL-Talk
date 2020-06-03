@@ -1,0 +1,116 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build_and_test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:8.12
+      - image: circleci/postgres:10.4-alpine
+        environment:
+          NODE_ENV: local
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test
+
+    working_directory: ~/compete-backend
+
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run: 
+          name: run tests
+          command: |
+            env >> test/.env
+            dockerize -wait tcp://localhost:5432 -timeout 1m
+            yarn test:ci
+          environment:
+            NODE_ENV: local
+            POSTGRES_HOST: localhost
+            POSTGRES_USER: postgres
+            POSTGRES_DB: test
+
+  deploy_dev:
+    docker:
+      - image: circleci/node:8.12
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "52:3f:da:90:42:74:25:42:6a:3e:33:14:a7:ef:83:13"
+      - checkout
+      - run: echo 'export NODE_ENV="dev"' >> $BASH_ENV
+      - run: echo 'export RDS_URL="${POSTGRES_HOST_DEV}"' >> $BASH_ENV
+      - run: source $BASH_ENV
+      - run: yarn install
+      - run: sudo yarn global add serverless
+      - run: serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
+      - run: ssh -4 -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes -NL ${TUNNEL_PORT}:${RDS_URL}:${POSTGRES_PORT} ec2-user@${BASTION_HOST} -v -f
+      - run: echo 'export POSTGRES_PORT="${TUNNEL_PORT}"' >> $BASH_ENV
+      - run: source $BASH_ENV
+      - run: yarn migrate:up
+      - run: echo 'export POSTGRES_PORT="5432"' >> $BASH_ENV
+      - run: echo 'export POSTGRES_HOST="${RDS_URL}"' >> $BASH_ENV
+      - run: source $BASH_ENV
+      - run: env > .env
+      - run: yarn deploy:dev
+
+  deploy_prod:
+    docker:
+      - image: circleci/node:8.12
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "52:3f:da:90:42:74:25:42:6a:3e:33:14:a7:ef:83:13"
+      - checkout
+      - run: echo 'export NODE_ENV="prod"' >> $BASH_ENV
+      - run: echo 'export RDS_URL="${POSTGRES_HOST_PROD}"' >> $BASH_ENV
+      - run: echo 'export POSTGRES_USER="${POSTGRES_USER_PROD}"' >> $BASH_ENV
+      - run: source $BASH_ENV
+      - run: yarn install
+      - run: sudo yarn global add serverless
+      - run: serverless config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
+      - run: ssh -4 -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes -NL ${TUNNEL_PORT}:${RDS_URL}:${POSTGRES_PORT} ec2-user@${BASTION_HOST} -v -f
+      - run: echo 'export POSTGRES_PORT="${TUNNEL_PORT}"' >> $BASH_ENV
+      - run: source $BASH_ENV
+      - run: yarn migrate:up
+      - run: echo 'export POSTGRES_PORT="5432"' >> $BASH_ENV
+      - run: echo 'export POSTGRES_HOST="${RDS_URL}"' >> $BASH_ENV
+      - run: source $BASH_ENV
+      - run: env > .env
+      - run: yarn deploy:prod
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - build_and_test
+      - deploy_dev:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only: develop
+              ignore: master
+      - deploy_prod:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only: master

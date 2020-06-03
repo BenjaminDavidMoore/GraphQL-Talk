@@ -1,0 +1,52 @@
+{
+  "name": "graphql-talk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon node server.js",
+    "test": "yarn db:up && yarn test:migrate:up && yarn test:seed:run && node --require ./test/.env.js ./node_modules/.bin/lab ./test -a code -r console -m 20000 --silent-skips --leaks",
+    "test:ci": "yarn test:migrate:up && yarn test:seed:run && node --require ./test/.env.js ./node_modules/.bin/lab ./test -a code -r console -m 20000 --silent-skips --leaks",
+    "coverage": "yarn db:up && yarn test:migrate:up && yarn test:seed:run && node --require ./test/.env.js ./node_modules/.bin/lab ./test -a code -m 20000 --silent-skips --leaks -r html -o coverage.html",
+    "migrate:make": "node --require ./.env.js ./node_modules/.bin/knex --knexfile src/knexfile.js migrate:make $@",
+    "migrate:up": "node --require ./.env.js ./node_modules/.bin/knex --knexfile src/knexfile.js migrate:latest",
+    "migrate:down": "node --require ./.env.js ./node_modules/.bin/knex --knexfile src/knexfile.js migrate:rollback",
+    "seed:make": "node --require ./.env.js ./node_modules/.bin/knex --knexfile src/knexfile.js seed:make",
+    "seed:run": "node --require ./.env.js ./node_modules/.bin/knex --knexfile src/knexfile.js seed:run",
+    "test:migrate:up": "node --require ./test/.env.js ./node_modules/.bin/knex --knexfile src/knexfile.js migrate:latest",
+    "test:migrate:down": "node --require ./test/.env.js ./node_modules/.bin/knex --knexfile src/knexfile.js migrate:rollback",
+    "test:seed:run": "node --require ./test/.env.js ./node_modules/.bin/knex --knexfile src/knexfile.js seed:run",
+    "setup": "yarn install && yarn db:up && yarn migrate:up && yarn seed:run",
+    "teardown": "./scripts/kill.sh && rm -rf ./node_modules",
+    "rebuild": "yarn teardown && yarn setup"
+  },
+  "author": "Ben Moore",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-errors": "^1.9.0",
+    "apollo-resolvers": "^1.4.1",
+    "apollo-server-express": "^2.4.8",
+    "body-parser-graphql": "^1.1.0",
+    "dataloader": "^1.4.0",
+    "date-fns": "^1.30.1",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "express-promise-router": "^3.0.3",
+    "graphql": "^14.1.1",
+    "joi": "^14.3.1",
+    "knex": "^0.16.3",
+    "lodash": "^4.17.11",
+    "merge-graphql-schemas": "^1.5.8",
+    "nodemon": "^1.19.1",
+    "pg": "^7.9.0",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "@dialexa/eslint-config-dialexa": "^5.3.0",
+    "babel-eslint": "^10.0.1",
+    "chance": "^1.0.18",
+    "code": "^5.2.4",
+    "eslint": "^5.15.3",
+    "lab": "^18.0.2"
+  }
+}

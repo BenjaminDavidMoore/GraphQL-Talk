@@ -1,0 +1,32 @@
+type Vehicle {
+	id: ID
+	name: String
+	createdAt: String
+	updatedAt: String
+	drivers(stuff: String): [Driver]
+}
+
+input CreateVehicleInput {
+	name: String!,
+	drivers: [ID]
+}
+
+input UpdateVehicleInput {
+	id: String!,
+	name: String
+}
+
+input DeleteVehicleInput {
+	id: ID!
+}
+
+type Query {
+	vehicle(id: String!): Vehicle
+	vehicles: [Vehicle]
+}
+
+type Mutation {
+	createVehicle(input: CreateVehicleInput): Driver @role(roles: [ "Admin" ])
+	updateVehicle(input: UpdateVehicleInput): Driver @role(roles: [ "Admin" ])
+	deleteVehicle(input: DeleteVehicleInput): Boolean @role(roles: [ "Admin" ])
+}

@@ -1,0 +1,34 @@
+type Driver {
+	id: ID
+	name: String
+	address: String
+	zip: Int
+}
+
+input CreateDriverInput {
+	name: String!
+	address: String!
+	zip: Int!
+}
+
+input UpdateDriverInput {
+	id: String!
+	name: String
+	address: String
+	zip: Int
+}
+
+input DeleteDriverInput {
+	id: ID
+}
+
+type Query {
+	driver(id: String!): Driver
+	drivers: [Driver]
+}
+
+type Mutation {
+	createDriver(input: CreateDriverInput!): Driver
+	updateDriver(input: UpdateDriverInput!): Driver
+	deleteDriver(input: DeleteDriverInput!): Boolean @role(roles: [ "admin" ])
+}
