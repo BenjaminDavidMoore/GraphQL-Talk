@@ -28,7 +28,8 @@ class RoleDirective extends SchemaDirectiveVisitor {
 
 			// The arguments to the directive are the required role for this query / mutation
 			const requiredRoles = this.args.roles;
-
+console.log('REQQUIRED ROLES', requiredRoles);
+console.log("actor:", context.actor );
 			// Check for a difference between the required role and the actor's role
 			const hasPermission = !!requiredRoles.find(role => role.toLowerCase() === context.actor.role.toLowerCase());
 
