@@ -30,5 +30,5 @@ type Query {
 type Mutation {
 	createDriver(input: CreateDriverInput!): Driver
 	updateDriver(input: UpdateDriverInput!): Driver
-	deleteDriver(input: DeleteDriverInput!): Boolean @role(roles: [ "admin" ])
+	deleteDriver(input: DeleteDriverInput!): Boolean @role(roles: [ "admin", "notAdmin" ])
 }

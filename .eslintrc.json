@@ -2,6 +2,7 @@
     "extends": "@dialexa/eslint-config-dialexa/node-es6",
     "parser": "babel-eslint",
     "parserOptions": {
+        "max-len": 150,
         "ecmaVersion": 6,
         "object-literal-sort-keys": false,
         "indent": [

@@ -10,9 +10,9 @@ const resolvers = {
 	},
 	Vehicle: {
 		drivers: ({ id: vehicleId }, query, { driverLoader, driverRepo }) => {
-		  return driverRepo.findByVehicleId(vehicleId);
+		  // return driverRepo.findByVehicleId(vehicleId);
 			// throw new Error('Uh oh');
-			// return driverLoader.load(vehicleId);
+			return driverLoader.load(vehicleId);
 		}
 	}
 };

@@ -12,7 +12,7 @@ Topics this repo covers:
 # Setup
 Be sure you have docker set up on your computer. If you don't you can do so [here](https://hub.docker.com/editions/community/docker-ce-desktop-mac/)
 
-You'll also probably want a DB client that can connect to a PostgreSQL database. If you're on a mac I highly recommend Postico, but if you're not, TablePlus is a good freemium alternative
+You'll also probably want a DB client that can connect to a PostgreSQL database. If you're on a mac I highly recommend Postico if you can swing the price, but if not, TablePlus is a good freemium alternative
 
 It goes without saying but you'll want Node on your computer as well since this is a Node project
 
