@@ -4,7 +4,5 @@ services:
     image: postgres:10.4-alpine
     ports:
       - 5432:5432
-    environment:
-      POSTGRES_DB: "${POSTGRES_DB}"
-    volumes:
-      - ./db/docker-entry-scripts:/docker-entrypoint-initdb.d/
+    env_file:
+      - .env

@@ -2,7 +2,7 @@ const { AuthenticationError, SchemaDirectiveVisitor } = require('apollo-server-e
 const { defaultFieldResolver } = require('graphql');
 const gql = require('graphql-tag');
 
-const log = require('../utils/logger')();
+const log = require('../../utils/logger')();
 
 class RoleDirective extends SchemaDirectiveVisitor {
 	visitFieldDefinition(object) {

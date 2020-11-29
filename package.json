@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon node server.js",
+    "start:monolith": "nodemon node src/_monolith/server.js",
+    "start:drivers": "nodemon node src/_drivers/server.js",
+    "start:vehicles": "nodemon node src/_vehicles/server.js",
+    "start:gateway": "nodemon node src/_gateway/server.js",
     "test": "yarn db:up && yarn test:migrate:up && yarn test:seed:run && node --require ./test/.env.js ./node_modules/.bin/lab ./test -a code -r console -m 20000 --silent-skips --leaks",
     "test:ci": "yarn test:migrate:up && yarn test:seed:run && node --require ./test/.env.js ./node_modules/.bin/lab ./test -a code -r console -m 20000 --silent-skips --leaks",
     "coverage": "yarn db:up && yarn test:migrate:up && yarn test:seed:run && node --require ./test/.env.js ./node_modules/.bin/lab ./test -a code -m 20000 --silent-skips --leaks -r html -o coverage.html",
@@ -23,8 +26,11 @@
   "author": "Ben Moore",
   "license": "ISC",
   "dependencies": {
+    "@apollo/federation": "^0.20.6",
+    "@apollo/gateway": "^0.21.3",
     "apollo-errors": "^1.9.0",
     "apollo-resolvers": "^1.4.1",
+    "apollo-server": "^2.19.0",
     "apollo-server-express": "^2.4.8",
     "body-parser-graphql": "^1.1.0",
     "dataloader": "^1.4.0",
@@ -33,12 +39,13 @@
     "express": "^4.16.4",
     "express-promise-router": "^3.0.3",
     "graphql": "^14.1.1",
+    "graphql-tag": "^2.11.0",
     "joi": "^14.3.1",
     "knex": "^0.16.3",
     "lodash": "^4.17.11",
     "merge-graphql-schemas": "^1.5.8",
     "nodemon": "^1.19.1",
-    "pg": "^7.9.0",
+    "pg": "^8.5.1",
     "winston": "^2.3.1"
   },
   "devDependencies": {

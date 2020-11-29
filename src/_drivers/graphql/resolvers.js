@@ -4,9 +4,9 @@ const { isInstance } = require('apollo-errors');
 const { createResolver } = require('apollo-resolvers');
 
 const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './**/*.resolver.js')));
-const log = require('../utils/logger')();
+const log = require('../../utils/logger')();
 const { UnauthenticatedError, UnknownError } = require('./throwable-errors');
-const repositories = require('../repositories');
+const repositories = require('../../repositories');
 
 const baseResolver = createResolver(null, (root, args, context, err) => {
 	if (isInstance(err)) {
@@ -26,19 +26,20 @@ const authenticatedResolver = baseResolver.createResolver(
 
 		// Check for a session and put the valid user's info into the context
 		// const { userId } = await authRepo.validateSession(authorization);
-		const { id: userId } = await repositories.sessionRepo.findOne({ id: authorization });
+		const session = await repositories.sessionRepo.findOne({ id: authorization });
 
-		if (!userId) throw new UnauthenticatedError();
+		if (!session || !session.id) throw new UnauthenticatedError();
 
 		// Add the user id to the context
-		context.actorId = userId;
+		context.actorId = session.id;
 	}
 );
 
 const unauthenticatedResolvers = {
-	Query: [ 'user', 'users', 'vehicle', 'vehicles', 'driver', 'drivers' ],
-	Mutation: [ 'login' ],
-	Vehicle: [ 'drivers' ]
+	Query: [ 'driver', 'drivers' ],
+	Mutation: [],
+	Vehicle: [ 'drivers' ],
+	Driver: [ '__resolveReference' ]
 };
 
 // Loop through all resolvers and wrap them with the authenticated resolver

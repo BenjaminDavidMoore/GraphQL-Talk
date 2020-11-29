@@ -1,5 +1,5 @@
 const DataLoader = require('dataloader');
-const repositories = require('../repositories');
+const repositories = require('../../repositories');
 
 const batchVehicles = async vehicleIds => {
 	const vehicles = await repositories.vehicleRepo.findMany({ id: vehicleIds });

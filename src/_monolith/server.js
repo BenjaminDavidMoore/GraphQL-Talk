@@ -6,15 +6,15 @@ require('dotenv').config({
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const { bodyParserGraphQL } = require('body-parser-graphql');
-const { directives: schemaDirectives } = require('./src/graphql/directives');
-const { endpoint, playgroundEndpoint } = require('./src/config').server;
-const { resolvers } = require('./src/graphql/resolvers');
-const context = require('./src/graphql/context');
+const { directives: schemaDirectives } = require('./graphql/directives');
+const { endpoint, playgroundEndpoint } = require('../config').server;
+const { resolvers } = require('./graphql/resolvers');
+const context = require('./graphql/context');
 const ExpressRouter = require('express-promise-router');
-const formatError = require('./src/graphql/format-error');
-const log = require('./src/utils/logger')();
-const typeDefs = require('./src/graphql/schema');
-const routes = require('./src/_monolith/routes');
+const formatError = require('./graphql/format-error');
+const log = require('../utils/logger')();
+const typeDefs = require('./graphql/schema');
+const routes = require('./routes');
 const app = express();
 
 const server = new ApolloServer({

@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader');
-const db = require('../utils/db');
-const log = require('../utils/logger')();
+const db = require('../../utils/db');
+const log = require('../../utils/logger')();
 
 const batchDrivers = async vehicleIds => {
 	log.info('Fetching drivers for vehicles with ids:', vehicleIds);

@@ -13,7 +13,11 @@ module.exports = {
 	server: {
 		port: process.env.APP_PORT || 4000,
 		endpoint: '/graphql',
-		playgroundEndpoint: getPlaygroundEndpoint()
+		playgroundEndpoint: getPlaygroundEndpoint(),
+		remoteServices: {
+			vehicles: { url: 'http://localhost:4001/graphql' },
+			drivers: { url: 'http://localhost:4002/graphql' }
+		}
 	},
 	db: {
 		charset: 'utf8',
@@ -28,7 +32,7 @@ module.exports = {
 			port: parseInt(process.env.POSTGRES_PORT, 10) || 5432,
 			user: process.env.POSTGRES_USER || 'postgres',
 			password: process.env.POSTGRES_PASSWORD,
-			database: process.env.POSTGRES_DB || 'test'
+			database: process.env.POSTGRES_DB || 'postgres'
 		},
 		postProcessResponse: result => convertCase(result, camelCase),
 		wrapIdentifier: (value, origImpl) => origImpl(convertCase(value, snakeCase))

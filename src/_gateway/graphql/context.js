@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const repos = require('../repositories');
+const db = require('../../utils/db');
+const repos = require('../../repositories');
 const loaders = require('../loaders');
 
 module.exports = ({ req, res }) => {
@@ -8,7 +8,9 @@ module.exports = ({ req, res }) => {
 	for (const loader in loaders) {
 		dataLoaders[loader] = loaders[loader]();
 	}
-
+	
+	console.log('Gateway context',req.header('Authorization') );
+	
 	return {
 		req,
 		res,

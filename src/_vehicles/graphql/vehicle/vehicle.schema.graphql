@@ -1,0 +1,36 @@
+type Vehicle @key(fields: "id") {
+	id: ID
+	name: String
+	createdAt: String
+	updatedAt: String
+	drivers: [Driver]
+}
+
+extend type Driver @key(fields: "id") {
+	id: ID @external
+}
+
+input CreateVehicleInput {
+	name: String!,
+	drivers: [ID]
+}
+
+input UpdateVehicleInput {
+	id: String!,
+	name: String
+}
+
+input DeleteVehicleInput {
+	id: ID!
+}
+
+type Query {
+	vehicle(id: String!): Vehicle
+	vehicles: [Vehicle]
+}
+
+type Mutation {
+	createVehicle(input: CreateVehicleInput): Vehicle @role(roles: [ "Admin" ])
+	updateVehicle(input: UpdateVehicleInput): Vehicle @role(roles: [ "Admin" ])
+	deleteVehicle(input: DeleteVehicleInput): Boolean @role(roles: [ "Admin" ])
+}

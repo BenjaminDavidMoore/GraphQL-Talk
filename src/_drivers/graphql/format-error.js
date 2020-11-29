@@ -1,6 +1,6 @@
 const { formatError: formatApolloError, isInstance, createError } = require('apollo-errors');
 const _ = require('lodash');
-const log = require('../utils/logger')();
+const log = require('../../utils/logger')();
 
 const BadRequestError = createError('BadRequestError', {
 	message: 'A bad request was detected'

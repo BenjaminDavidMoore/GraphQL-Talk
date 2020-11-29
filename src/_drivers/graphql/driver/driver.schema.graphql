@@ -1,0 +1,39 @@
+type Driver @key(fields: "id") {
+	id: ID
+	name: String
+	address: String
+	zip: Int
+	vehicles: [Vehicle]
+}
+
+extend type Vehicle @key(fields: "id") {
+	id: ID @external
+}
+
+input CreateDriverInput {
+	name: String!
+	address: String!
+	zip: Int!
+}
+
+input UpdateDriverInput {
+	id: String!
+	name: String
+	address: String
+	zip: Int
+}
+
+input DeleteDriverInput {
+	id: ID
+}
+
+type Query {
+	driver(id: String!): Driver
+	drivers: [Driver]
+}
+
+type Mutation {
+	createDriver(input: CreateDriverInput!): Driver
+	updateDriver(input: UpdateDriverInput!): Driver
+	deleteDriver(input: DeleteDriverInput!): Boolean
+}
